@@ -1,0 +1,53 @@
+/* PLEASE NOTE: THESE TAILWIND IMPORTS SHOULD NEVER BE DELETED */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+/* DO NOT DELETE THESE TAILWIND IMPORTS, OTHERWISE THE STYLING WILL NOT RENDER AT ALL */
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+/* Global styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f0f2f5;
+}
+/* Custom animations and transitions */
+.transition-all {
+  transition: all 0.3s ease;
+}
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+/* Custom button styles */
+.btn-zetech {
+  @apply bg-zetech-blue text-white font-medium py-2 px-6 rounded-md transition-all hover:bg-zetech-blue-light focus:outline-none focus:ring-2 focus:ring-zetech-blue focus:ring-opacity-50;
+}
+.btn-zetech-secondary {
+  @apply bg-gray-200 text-gray-800 font-medium py-2 px-6 rounded-md transition-all hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50;
+}
+/* Custom card styles */
+.zetech-card {
+  @apply bg-white rounded-lg shadow-zetech hover:shadow-zetech-md transition-all border border-gray-100;
+}
+/* Form styles */
+.form-input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-zetech-blue focus:border-transparent transition-all;
+}
+.form-label {
+  @apply block text-gray-700 font-medium mb-2;
+}
+/* Status badge styles */
+.status-pending {
+  @apply bg-yellow-100 text-yellow-800 border-yellow-300;
+}
+.status-review {
+  @apply bg-zetech-blue-light bg-opacity-10 text-zetech-blue border-zetech-blue-light;
+}
+.status-resolved {
+  @apply bg-green-100 text-green-800 border-green-300;
+}
+.status-closed {
+  @apply bg-gray-100 text-gray-800 border-gray-300;
+}
