@@ -1,12 +1,9 @@
 {
-  "redirects": [
+  "rewrites": [
     {
       "source": "/sitemap.xml",
-      "destination": "/api/sitemap",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
+      "destination": "/api/sitemap"
+    },
     {
       "source": "/((?!sitemap\\.xml).*)",
       "destination": "/"
