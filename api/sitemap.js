@@ -24,7 +24,8 @@ ${urls
   </url>`
   )
   .join("\n")}
-</urlset>`;
+</urlset>
+`;
 
-  res.status(200).send(xml);
+  res.status(200).end(xml);
 }
