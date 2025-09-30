@@ -8,11 +8,20 @@
           "value": "application/xml; charset=utf-8"
         }
       ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
     }
   ],
   "rewrites": [
     {
-      "source": "/((?!sitemap\\.xml$).*)",
+      "source": "/((?!sitemap\\.xml$|robots\\.txt$).*)",
       "destination": "/"
     }
   ]
