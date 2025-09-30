@@ -24,8 +24,8 @@ ${urls
   </url>`
   )
   .join("\n")}
-</urlset>
-`;
+</urlset>`;
 
-  res.status(200).end(xml);
+  // ✅ Send raw buffer so Vercel doesn’t strip the XML declaration
+  res.status(200).end(Buffer.from(xml));
 }
