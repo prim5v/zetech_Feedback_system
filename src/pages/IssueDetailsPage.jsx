@@ -115,7 +115,7 @@ const IssueDetailsPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           issue_id: issue.id,
-          user_id: user?.id || "admin", // fallback
+          user_id: user?.user_id || "admin", // fallback
           message: responseText
         })
       });
@@ -125,7 +125,7 @@ const IssueDetailsPage = () => {
         const newResponse = {
           id: `resp-${Date.now()}`,
           text: responseText,
-          adminId: user?.id || '',
+          adminId: user?.user_id || '',
           adminName: user?.name || 'Admin',
           createdAt: new Date()
         };

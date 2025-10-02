@@ -123,7 +123,7 @@ const AdminDashboardPage = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold text-zetech-blue-dark">Admin Dashboard</h1>
-          <p className="text-gray-600">Welcome back, {user?.name}</p>
+          <p className="text-gray-600">Welcome back, {user?.username}</p>
         </div>
         <div className="mt-4 md:mt-0 flex space-x-2">
           <button

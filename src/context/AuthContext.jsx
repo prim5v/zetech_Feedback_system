@@ -1,83 +1,86 @@
-import React, { useEffect, useState, createContext, useContext } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-// Create context
+import React, { useEffect, useState, createContext, useContext } from "react";
+
 const AuthContext = createContext();
-// Sample admin users
-const ADMIN_USERS = [{
-  id: '1',
-  name: 'Admin User',
-  email: 'admin@zetech.ac.ke',
-  password: 'admin123',
-  role: 'admin'
-}];
-export const AuthProvider = ({
-  children
-}) => {
+const API_BASE = "https://feedback4293.pythonanywhere.com"; // your backend base URL
+
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  // Check for stored user on initial load
+
+  // Load user from localStorage on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser');
+    const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
   }, []);
-  // Login function for admins
+
+  // 🔑 Real login (calls backend /login)
   const login = async (email, password) => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    // Check if user exists
-    const foundUser = ADMIN_USERS.find(u => u.email === email && u.password === password);
-    if (foundUser) {
-      const {
-        password,
-        ...userWithoutPassword
-      } = foundUser;
-      setUser(userWithoutPassword);
-      localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
+    try {
+      const res = await fetch(`${API_BASE}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Login failed:", data.error);
+        return false;
+      }
+
+      // Save backend user to state + localStorage
+      setUser(data.user);
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
       return true;
+    } catch (err) {
+      console.error("Error logging in:", err);
+      return false;
     }
-    return false;
   };
-  // Login function for students (simplified, no password)
+
+  // 🟢 Optional compatibility: loginAsStudent (maps to backend admin login too)
   const loginAsStudent = (name, email) => {
     const newUser = {
-      id: uuidv4(),
-      name,
+      id: Date.now(),
+      username: name,
       email,
-      role: 'student'
+      role: "admin", // force admin role for all
     };
     setUser(newUser);
-    localStorage.setItem('currentUser', JSON.stringify(newUser));
-    // Also store in students array for persistence
-    const students = JSON.parse(localStorage.getItem('students') || '[]');
-    if (!students.find(s => s.email === email)) {
-      students.push(newUser);
-      localStorage.setItem('students', JSON.stringify(students));
-    }
+    localStorage.setItem("currentUser", JSON.stringify(newUser));
   };
-  // Logout function
+
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem("currentUser");
   };
-  return <AuthContext.Provider value={{
-    user,
-    isAuthenticated: !!user,
-    login,
-    loginAsStudent,
-    logout
-  }}>
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        login,
+        loginAsStudent,
+        logout,
+      }}
+    >
       {children}
-    </AuthContext.Provider>;
+    </AuthContext.Provider>
+  );
 };
-// Custom hook to use auth context
+
+// Hook
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
+
 
 
 
