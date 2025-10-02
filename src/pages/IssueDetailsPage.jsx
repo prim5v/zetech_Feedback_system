@@ -175,7 +175,7 @@ const IssueDetailsPage = () => {
             <span className="mr-3 text-sm text-gray-600">Status:</span>
             <select value={issue.status} onChange={handleStatusChange} className="form-input py-1 px-3 text-sm">
               <option value="Pending">Pending</option>
-              <option value="In Review">in Review</option>
+              <option value="In Review">In Review</option>
               <option value="Resolved">Resolved</option>
               <option value="Closed">Closed</option>
             </select>
