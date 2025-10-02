@@ -80,11 +80,11 @@ const AdminLoginPage = () => {
               </>}
           </button>
         </form>
-        <div className="mt-4 text-center text-sm text-gray-600">
+        {/* <div className="mt-4 text-center text-sm text-gray-600">
           <p>Demo credentials:</p>
           <p>Email: admin@zetech.ac.ke</p>
           <p>Password: admin123</p>
-        </div>
+        </div> */}
       </div>
     </div>;
 };
