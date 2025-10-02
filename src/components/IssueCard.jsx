@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import StatusBadge from './StatusBadge';
 import { CalendarIcon, MessageSquareIcon } from 'lucide-react';
+
 const IssueCard = ({
   issue,
   showLink = true,
@@ -14,7 +15,9 @@ const IssueCard = ({
       day: 'numeric'
     });
   };
-  return <div className="zetech-card hover-scale overflow-hidden">
+
+  return (
+    <div className="zetech-card hover-scale overflow-hidden">
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-semibold text-gray-800 truncate">
@@ -37,15 +40,24 @@ const IssueCard = ({
           </div>
           <div className="flex items-center">
             <MessageSquareIcon size={14} className="mr-1" />
-            <span>{issue.responses.length} responses</span>
+            {/* Use response_count from backend */}
+            <span>{issue.response_count} response{issue.response_count !== 1 ? 's' : ''}</span>
           </div>
         </div>
       </div>
-      {showLink && <div className="bg-gray-50 px-4 py-2 border-t border-gray-200">
-          <Link to={linkPath} className="text-zetech-blue hover:text-zetech-blue-dark text-sm font-medium transition-all">
+
+      {showLink && (
+        <div className="bg-gray-50 px-4 py-2 border-t border-gray-200">
+          <Link
+            to={linkPath}
+            className="text-zetech-blue hover:text-zetech-blue-dark text-sm font-medium transition-all"
+          >
             View Details →
           </Link>
-        </div>}
-    </div>;
+        </div>
+      )}
+    </div>
+  );
 };
+
 export default IssueCard;

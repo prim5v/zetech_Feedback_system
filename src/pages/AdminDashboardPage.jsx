@@ -37,7 +37,9 @@ const AdminDashboardPage = () => {
             title: issue.title,
             description: issue.description,
             category: issue.category || "Others",
-            status: issue.status ? issue.status.charAt(0).toUpperCase() + issue.status.slice(1) : "Pending",
+            status: issue.status
+              ? issue.status.charAt(0).toUpperCase() + issue.status.slice(1)
+              : "Pending",
             createdAt: new Date(issue.submitted_at),
             updatedAt: new Date(issue.updated_at),
             isAnonymous: issue.submission_type === "Anonymous",
@@ -45,7 +47,7 @@ const AdminDashboardPage = () => {
             studentEmail: issue.email,
             contactNumber: issue.contact_number,
             admissionNumber: issue.admission_number,
-            responses: [] // load separately in issue details page
+            response_count: issue.response_count || 0, // <-- new
           }));
           setIssues(mappedIssues);
         } else {
@@ -143,7 +145,7 @@ const AdminDashboardPage = () => {
         </div>
       </div>
 
-      {/* ✅ Filters Section should be OUTSIDE stats */}
+      {/* Filters Section */}
       {showFilters && (
         <div className="zetech-card p-4 mb-6">
           <div className="flex justify-between items-center mb-4">
