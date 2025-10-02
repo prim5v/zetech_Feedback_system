@@ -24,6 +24,17 @@ const TrackIssuePage = () => {
     if (savedPosition) setPosition(savedPosition);
   }, []);
 
+  // Auto-collapse when clicking outside floater
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (floaterRef.current && !floaterRef.current.contains(event.target)) {
+        setCollapsed(true);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!ticketId.trim()) {
