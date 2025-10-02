@@ -22,7 +22,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center">
             {/* Zetech University Logo */}
             <img src={ZETECH_LOGO} alt="Zetech University" className="h-10 mr-3" />
-            <span className="text-xl font-bold hidden md:block">Feedback Hub</span>
+            <span className="text-xl font-bold hidden md:block">Univesity Feedback Portal</span>
           </Link>
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">

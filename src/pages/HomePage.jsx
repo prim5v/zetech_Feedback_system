@@ -9,7 +9,7 @@ const HomePage = () => {
       <section className="text-center py-12 px-4">
         <img src={ZETECH_LOGO} alt="Zetech University" className="h-24 mx-auto mb-6" />
         <h1 className="text-4xl md:text-5xl font-bold text-zetech-blue-dark mb-4">
-          Zetech Feedback Hub
+          Zetech Univesity Feedback Portal
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
           A platform for students to share issues and suggestions anonymously or with their identity.
