@@ -282,7 +282,7 @@ const SubmitIssuePage = () => {
                 onChange={e => setName(e.target.value)}
                 className={`form-input ${errors.name ? 'border-red-500 ring-red-500' : ''}`}
                 placeholder="Your full name"
-                // disabled={isAuthenticated}
+                disabled={isAuthenticated}
               />
               {errors.name && (
                 <p className="text-red-500 text-sm mt-1 flex items-center">
@@ -304,7 +304,7 @@ const SubmitIssuePage = () => {
                 onChange={e => setEmail(e.target.value)}
                 className={`form-input ${errors.email ? 'border-red-500 ring-red-500' : ''}`}
                 placeholder="Your email address"
-                // disabled={isAuthenticated}
+                disabled={isAuthenticated}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1 flex items-center">
