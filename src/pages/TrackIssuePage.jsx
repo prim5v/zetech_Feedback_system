@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import StatusBadge from '../components/StatusBadge';
-import { AlertCircleIcon, SearchIcon } from 'lucide-react';
+import { AlertCircleIcon, SearchIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 
 const TrackIssuePage = () => {
   const [ticketId, setTicketId] = useState('');
@@ -8,6 +8,21 @@ const TrackIssuePage = () => {
   const [issue, setIssue] = useState(null);
   const [responses, setResponses] = useState([]);
   const [error, setError] = useState('');
+  const [recentTickets, setRecentTickets] = useState([]);
+  const [collapsed, setCollapsed] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 20, y: 20 });
+  const floaterRef = useRef(null);
+  const offset = useRef({ x: 0, y: 0 });
+
+  // Load recent tickets & floater position from localStorage
+  useEffect(() => {
+    const tickets = JSON.parse(localStorage.getItem('recentTickets') || '[]');
+    setRecentTickets(tickets);
+
+    const savedPosition = JSON.parse(localStorage.getItem('floaterPosition'));
+    if (savedPosition) setPosition(savedPosition);
+  }, []);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -32,6 +47,11 @@ const TrackIssuePage = () => {
         setIssue(data.issue);
         setResponses(data.responses || []);
         setError('');
+
+        const newTicket = { ticket_id: data.issue.ticket_id, title: data.issue.title };
+        const updatedTickets = [newTicket, ...recentTickets.filter(t => t.ticket_id !== newTicket.ticket_id)].slice(0, 10);
+        setRecentTickets(updatedTickets);
+        localStorage.setItem('recentTickets', JSON.stringify(updatedTickets));
       } else {
         setIssue(null);
         setResponses([]);
@@ -55,11 +75,118 @@ const TrackIssuePage = () => {
     });
   };
 
+  const handleTicketClick = (id) => {
+    setTicketId(id);
+    setSearched(false);
+  };
+
+  const handleClearTickets = () => {
+    if (window.confirm("Are you sure you want to clear all recent tickets?")) {
+      localStorage.removeItem('recentTickets');
+      setRecentTickets([]);
+    }
+  };
+
+  // Drag handlers
+  const onMouseDown = (e) => {
+    setDragging(true);
+    offset.current = { x: e.clientX - position.x, y: e.clientY - position.y };
+  };
+
+  const onMouseMove = (e) => {
+    if (dragging) {
+      let newX = e.clientX - offset.current.x;
+      let newY = e.clientY - offset.current.y;
+
+      // Prevent dragging outside viewport
+      const floater = floaterRef.current;
+      if (floater) {
+        const rect = floater.getBoundingClientRect();
+        newX = Math.max(0, Math.min(newX, window.innerWidth - rect.width));
+        newY = Math.max(0, Math.min(newY, window.innerHeight - rect.height));
+      }
+
+      setPosition({ x: newX, y: newY });
+    }
+  };
+
+  const onMouseUp = () => {
+    setDragging(false);
+    localStorage.setItem('floaterPosition', JSON.stringify(position));
+  };
+
+  useEffect(() => {
+    if (dragging) {
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    } else {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, [dragging, position]);
+
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto relative">
       <h1 className="text-3xl font-bold text-zetech-blue-dark mb-6">
         Track Your Issue
       </h1>
+
+      {/* Floating Recent Tickets */}
+      {recentTickets.length > 0 && (
+        <div
+          ref={floaterRef}
+          className={`fixed bg-white border border-gray-200 rounded-lg shadow-lg w-64 max-h-96 overflow-hidden z-50 cursor-move transition-transform duration-150 ${
+            dragging ? 'scale-105' : ''
+          }`}
+          style={{ top: position.y, left: position.x }}
+        >
+          <div
+            className="flex justify-between items-center p-3 border-b border-gray-200 bg-zetech-blue-light rounded-t-lg text-white"
+            onMouseDown={onMouseDown}
+          >
+            <span className="font-medium">Recent Tickets</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs bg-red-500 px-2 py-0.5 rounded-full">{recentTickets.length}</span>
+              <button
+                onClick={() => setCollapsed(!collapsed)}
+                className="text-white hover:text-gray-200 px-2"
+              >
+                {collapsed ? <ChevronDownIcon size={16} /> : <ChevronUpIcon size={16} />}
+              </button>
+              <button
+                onClick={handleClearTickets}
+                className="ml-2 bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-xs font-medium"
+              >
+                Clear All
+              </button>
+            </div>
+          </div>
+
+          {!collapsed && (
+            <div className="overflow-y-auto max-h-80">
+              <ul className="divide-y divide-gray-200">
+                {recentTickets.map((ticket, index) => (
+                  <li key={ticket.ticket_id}>
+                    <button
+                      className={`w-full text-left px-3 py-2 text-sm rounded-md hover:bg-zetech-blue-light hover:text-white transition-colors ${
+                        index === 0 ? 'bg-zetech-blue text-white font-semibold' : 'text-zetech-blue'
+                      }`}
+                      onClick={() => handleTicketClick(ticket.ticket_id)}
+                      title={ticket.title}
+                    >
+                      {ticket.ticket_id} {index === 0 && '(Latest)'}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Search Form */}
       <div className="zetech-card p-6 mb-8">

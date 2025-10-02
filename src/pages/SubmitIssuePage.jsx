@@ -57,43 +57,52 @@ const SubmitIssuePage = () => {
   };
 
   const handleSubmit = async e => {
-    e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
+  e.preventDefault();
+  if (!validateForm()) return;
 
-    const issueData = {
-      title,
-      description,
-      category,
-      name: isAnonymous ? null : name,
-      user_id: isAnonymous ? null : user?.id || null,
-      email: isAnonymous ? null : email,
-      phone: isAnonymous ? null : phone,
-      admission: isAnonymous ? null : admission
-    };
-
-    try {
-      const res = await fetch("https://feedback4293.pythonanywhere.com/api/submit_issue", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(issueData)
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setTicketId(data.ticket_id);
-        setSubmitted(true);
-      } else {
-        setErrors({ api: data.error || "Submission failed" });
-      }
-    } catch (err) {
-      console.error("Error submitting issue:", err);
-      setErrors({ api: "Server error. Try again later." });
-    }
+  const issueData = {
+    title,
+    description,
+    category,
+    name: isAnonymous ? null : name,
+    user_id: isAnonymous ? null : user?.id || null,
+    email: isAnonymous ? null : email,
+    phone: isAnonymous ? null : phone,
+    admission: isAnonymous ? null : admission
   };
+
+  try {
+    const res = await fetch("https://feedback4293.pythonanywhere.com/api/submit_issue", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(issueData)
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      setTicketId(data.ticket_id);
+      setSubmitted(true);
+
+      // Store ticket in localStorage, latest first, max 10 tickets
+      const existingTickets = JSON.parse(localStorage.getItem('recentTickets') || '[]');
+      const newTicket = {
+        ticket_id: data.ticket_id,
+        title,
+        date: new Date().toISOString()
+      };
+      // Add new ticket to the beginning and slice last 10
+      const updatedTickets = [newTicket, ...existingTickets].slice(0, 10);
+      localStorage.setItem('recentTickets', JSON.stringify(updatedTickets));
+
+    } else {
+      setErrors({ api: data.error || "Submission failed" });
+    }
+  } catch (err) {
+    console.error("Error submitting issue:", err);
+    setErrors({ api: "Server error. Try again later." });
+  }
+};
+
 
   const handleNewSubmission = () => {
     setTitle('');
