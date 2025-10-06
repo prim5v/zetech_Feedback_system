@@ -140,6 +140,38 @@ const TrackIssuePage = () => {
     };
   }, [dragging, position]);
 
+  // 🔁 Silent polling every 5 seconds for live feedback updates
+  useEffect(() => {
+    if (!issue?.ticket_id) return; // Only poll if an issue is being tracked
+
+    const fetchUpdates = async () => {
+      try {
+        const res = await fetch("https://feedback4293.pythonanywhere.com/api/track_issue", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ticket_id: issue.ticket_id }),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          // Update only if new responses or status changed
+          if (
+            JSON.stringify(data.responses) !== JSON.stringify(responses) ||
+            data.issue.status !== issue.status
+          ) {
+            setResponses(data.responses || []);
+            setIssue(data.issue);
+          }
+        }
+      } catch (err) {
+        console.error("Polling error:", err);
+      }
+    };
+
+    const interval = setInterval(fetchUpdates, 5000); // 5 seconds
+    return () => clearInterval(interval);
+  }, [issue, responses]);
+
   return (
     <div className="max-w-3xl mx-auto relative">
       <h1 className="text-3xl font-bold text-zetech-blue-dark mb-6">

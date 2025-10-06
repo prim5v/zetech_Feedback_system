@@ -31,8 +31,8 @@ const HomePage = () => {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Step 1 */}
           <div className="zetech-card p-6 text-center hover-scale">
-            <div className="w-16 h-16 bg-zetech-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MessageSquareIcon size={30} className="text-zetech-blue" />
+            <div className="w-16 h-16 bg-zetech-blue-dark bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <MessageSquareIcon size={30} className="text-zetech-blue-dark" />
             </div>
             <h3 className="text-xl font-semibold mb-2">Submit</h3>
             <p className="text-gray-600">
@@ -42,8 +42,8 @@ const HomePage = () => {
           </div>
           {/* Step 2 */}
           <div className="zetech-card p-6 text-center hover-scale">
-            <div className="w-16 h-16 bg-zetech-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <UsersIcon size={30} className="text-zetech-blue" />
+            <div className="w-16 h-16 bg-zetech-blue-dark bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <UsersIcon size={30} className="text-zetech-blue-dark" />
             </div>
             <h3 className="text-xl font-semibold mb-2">Review</h3>
             <p className="text-gray-600">
@@ -53,8 +53,8 @@ const HomePage = () => {
           </div>
           {/* Step 3 */}
           <div className="zetech-card p-6 text-center hover-scale">
-            <div className="w-16 h-16 bg-zetech-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <SearchIcon size={30} className="text-zetech-blue" />
+            <div className="w-16 h-16 bg-zetech-blue-dark bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <SearchIcon size={30} className="text-zetech-blue-dark" />
             </div>
             <h3 className="text-xl font-semibold mb-2">Track</h3>
             <p className="text-gray-600">

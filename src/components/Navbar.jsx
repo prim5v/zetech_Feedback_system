@@ -16,7 +16,7 @@ const Navbar = () => {
     logout();
     navigate('/');
   };
-  return <nav className="bg-zetech-blue text-white shadow-md">
+  return <nav className="bg-zetech-blue-dark text-white shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center">

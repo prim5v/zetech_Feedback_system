@@ -1,18 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-  './index.html',
-  './src/**/*.{js,ts,jsx,tsx}'
-],
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}'
+  ],
   theme: {
     extend: {
       colors: {
         zetech: {
-          blue: '#0056b3',
-          'blue-light': '#007bff',
-          'blue-dark': '#004494',
+          blue: '#00264d',
+          'blue-light': '#00264d',
+          'blue-dark': '#00264d',
           gray: '#f0f2f5',
-          'gray-dark': '#6c757d'
+          'gray-dark': '#6c757d',
+          'orange-dark': '#c04000' // 🟧 added dark orange
         }
       },
       fontFamily: {

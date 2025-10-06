@@ -12,6 +12,7 @@ const AdminDashboardPage = () => {
 
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   // Filters
   const [statusFilter, setStatusFilter] = useState('All');
@@ -21,16 +22,17 @@ const AdminDashboardPage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showStats, setShowStats] = useState(false);
 
-  // 🔥 Fetch issues from backend
+  // 🔥 Fetch issues from backend with silent polling every 5 seconds
   useEffect(() => {
-    const fetchIssues = async () => {
+    let interval;
+
+    const fetchIssues = async (silent = false) => {
       try {
-        setLoading(true);
+        if (!silent) setLoading(true);
         const res = await fetch(`${API_BASE}/get_all_issues`);
         const data = await res.json();
 
         if (res.ok) {
-          // Map backend structure to frontend UI structure
           const mappedIssues = data.Issues.map(issue => ({
             id: issue.issue_id,
             ticketId: issue.ticket_id,
@@ -47,20 +49,35 @@ const AdminDashboardPage = () => {
             studentEmail: issue.email,
             contactNumber: issue.contact_number,
             admissionNumber: issue.admission_number,
-            response_count: issue.response_count || 0, // <-- new
+            response_count: issue.response_count || 0,
           }));
-          setIssues(mappedIssues);
+
+          // ✅ Only update if data changed
+          setIssues(prev => {
+            if (JSON.stringify(prev) !== JSON.stringify(mappedIssues)) {
+              setLastUpdated(new Date().toLocaleTimeString());
+              return mappedIssues;
+            }
+            return prev;
+          });
         } else {
           console.error("Failed to fetch issues:", data.error || data.message);
         }
       } catch (error) {
         console.error("Error fetching issues:", error);
       } finally {
-        setLoading(false);
+        if (!silent) setLoading(false);
       }
     };
 
+    // Initial fetch
     fetchIssues();
+
+    // Silent polling every 5 seconds
+    interval = setInterval(() => fetchIssues(true), 5000);
+
+    // Cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
 
   // Apply filters
@@ -126,6 +143,11 @@ const AdminDashboardPage = () => {
         <div>
           <h1 className="text-3xl font-bold text-zetech-blue-dark">Admin Dashboard</h1>
           <p className="text-gray-600">Welcome back, {user?.username}</p>
+          {lastUpdated && (
+            <p className="text-xs text-gray-500 mt-1">
+              Last updated: {lastUpdated}
+            </p>
+          )}
         </div>
         <div className="mt-4 md:mt-0 flex space-x-2">
           <button
