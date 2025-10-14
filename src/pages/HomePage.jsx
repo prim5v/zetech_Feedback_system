@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquareIcon, SearchIcon, UsersIcon } from 'lucide-react';
 // Zetech University logo URL
-const ZETECH_LOGO = "https://i.pinimg.com/736x/b9/76/2d/b9762d2d8f581d0111317f04e460b152.jpg";
+const ZETECH_LOGO = "download.jpeg";
 const HomePage = () => {
   return <div className="max-w-5xl mx-auto">
       {/* Hero Section */}
